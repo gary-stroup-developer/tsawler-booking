@@ -19,9 +19,12 @@ func main() {
 		log.Fatal(err)
 	}
 	app.TemplateCache = tc
+	app.UseCache = false
 
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
+
+	render.NewTemplates(&app)
 
 	http.HandleFunc("/", handlers.Repo.Home)
 	http.HandleFunc("/about", handlers.Repo.About)
