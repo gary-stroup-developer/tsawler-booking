@@ -5,12 +5,12 @@
     <div class="col">
         <h1 class="mt-3">About Page </h1>
         <hr>
-        <p>
-            <img style="float:right; display:inline-block; max-width: 400px; padding: 5px;" src="/static/images/outside.png">
-        </p>
+
         <p>Something interesting to put here will eventually go here. Not sure what it is yet</p>
         <p>Something else will aslo go here. Just trying to figure it all out. It be that way sometimes</p>
-        <p>This came from the template: {{index .StringMap "test"}} </p>
+        <p>This came from the template: {{range .StringMap }} {{.}} {{end}}</p>
+        
+    
     </div>
 </div>
 

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/models"
@@ -32,8 +33,13 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello, again."
+
+	stringMap := map[string]string{
+		"a": "Hello, again",
+		"b": "Gary",
+		"t": "Stroup",
+		"z": strconv.FormatBool(Repo.App.UseCache),
+	}
 	render.RenderTemplate(w, "about.page.gohtml", &models.TemplateData{
 		StringMap: stringMap,
 	})
