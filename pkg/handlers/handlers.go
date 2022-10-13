@@ -53,3 +53,7 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 		StringMap: stringMap,
 	})
 }
+
+func (m *Repository) Fashion(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "fashion.page.gohtml", &models.TemplateData{})
+}
