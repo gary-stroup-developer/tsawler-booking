@@ -1,19 +1,32 @@
 {{template "base" .}}
 
 {{define "content"}}
-<div class="row">
-    <div class="col">
-        <h1 class="mt-3">About Page </h1>
-        <hr>
-
-        <p>Something interesting to put here will eventually go here. Not sure what it is yet</p>
-        <p>Something else will aslo go here. Just trying to figure it all out. It be that way sometimes</p>
-        <div style="display:flex; justify-content: space-between; padding: 5px;">
-            <img style="max-width: 400px; padding: 5px;" src="/static/images/boats.jpg"> 
-            <img style="max-width: 400px; padding: 5px;" src="/static/images/koyasanTemple.jpg">  
+ <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mt-4">About Page Info</h1>
+                <p>
+                    Something goes here
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <a href="/make-reservation" class="btn btn-success">Check Availability</a>
+            </div>
         </div>
     
     </div>
-</div>
+    <div class="row my-footer w-100">
+        <div class="col">
+            Left
+        </div>
+        <div class="col">
+            Middle
+        </div>
+        <div class="col">
+            Right
+        </div>
+    </div>
 
 {{end}}

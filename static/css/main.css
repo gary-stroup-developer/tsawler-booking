@@ -1,0 +1,11 @@
+.my-footer {
+    background-color: #643296;
+    color: #fff;
+    padding: 1.5em;
+    position:relative;
+    bottom: 0;
+    margin:2rem 0 0 0;
+}
+.redText {
+    color: red;
+}

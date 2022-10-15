@@ -1,0 +1,35 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+ <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="mt-5">Search for Availability</h1>
+
+                <form action="" method="post">
+
+                    <div class="form-group">
+                        <label for="start_date">Starting Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date"
+                            aria-describedby="emailHelp">
+                        <small id="emailHelp" class="form-text text-muted">Enter your starting date in the form of
+                            YYYY-MM-DD</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row my-footer w-100">
+        <div class="col">
+            Left
+        </div>
+        <div class="col">
+            Middle
+        </div>
+        <div class="col">
+            Right
+        </div>
+    </div>
+{{end}}
