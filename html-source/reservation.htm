@@ -129,7 +129,9 @@
         integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
+
     <script>
+        let attention = Prompt();
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (function () {
             'use strict';
@@ -151,11 +153,12 @@
 
         document.getElementById("colorButton").addEventListener("click",function(){
             //notify("This is my message","error")
-            notifyModal("Room Reservation","Where will you go?","success","Awesome!")
-        })
-    </script>
+            //notifyModal("Room Reservation","Where will you go?","success","Awesome!")
+            //attention.toast({title:"Room Booked!"});
 
-    <script>
+            attention.error({title: "Room has been booked!",text:"This is what it is all about",footer:'<hr><p>Created by Gary Stroup</p>'})
+        })
+
         const elem = document.getElementById('reservation-dates');
             const rangepicker = new DateRangePicker(elem, {
                 format:"dd-MM-yyyy"
@@ -175,6 +178,66 @@
                 icon,
                 confirmButtonText
             })
+        }
+
+        function Prompt() {
+            let toast = function(c) {
+                const {
+                    title = "",
+                    icon = "success",
+                    position= "top-end",
+
+                } = c;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    title,
+                    position,
+                    icon,
+                    showConfirmButton:false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter',Swal.stopTimer)
+                        toast.addEventListener('mouseleave',Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({})
+            }
+
+            let success = function (b) {
+                const {
+                    title = "",
+                    text = "",
+                    footer = "",
+                } = b
+                Swal.fire({
+                    icon: "success",
+                    title,
+                    text,
+                    footer,
+                })
+            }
+
+            let error = function (b) {
+                const {
+                    title = "",
+                    text = "",
+                    footer = "",
+                } = b
+                Swal.fire({
+                    icon: "error",
+                    title,
+                    text,
+                    footer,
+                })
+            }
+
+            return {
+                toast,
+                success,
+                error,
+            }
         }
     </script>
     <script src="https://unpkg.com/notie"></script>
