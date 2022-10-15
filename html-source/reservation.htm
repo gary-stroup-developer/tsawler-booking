@@ -156,11 +156,28 @@
             //notifyModal("Room Reservation","Where will you go?","success","Awesome!")
             //attention.toast({title:"Room Booked!"});
 
-            attention.error({title: "Room has been booked!",text:"This is what it is all about",footer:'<hr><p>Created by Gary Stroup</p>'})
+            let html = `
+                <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-row" id="reservation-dates-modal">
+                                <div class="col">
+                                    <input disabled class="form-control" type="text" name="start" id="start" placeholder="Arrival">
+                                </div>
+                                <div class="col">
+                                    <input disabled class="form-control" type="text" name="end" id="end" placeholder="Departure">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            `
+
+            attention.custom({title: "Choose your dates",html})
         })
 
         const elem = document.getElementById('reservation-dates');
-            const rangepicker = new DateRangePicker(elem, {
+        
+        const rangepicker = new DateRangePicker(elem, {
                 format:"dd-MM-yyyy"
             }); 
 
@@ -225,6 +242,7 @@
                     text = "",
                     footer = "",
                 } = b
+
                 Swal.fire({
                     icon: "error",
                     title,
@@ -233,10 +251,51 @@
                 })
             }
 
-            return {
+
+            async function custom(c) {
+                const {
+                    html = "",
+                    title = "",
+                } = c;
+
+                const {value: formValue} = await Swal.fire({
+                    title,
+                    html,
+                    backdrop: false,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    willOpen: () => {
+                        const elem = document.getElementById('reservation-dates-modal');
+                        const form = document.getElementById('check-availability-form');
+
+                        form.style.height = "350px";
+                        form.style.width = "350px";
+                        const rp = new DateRangePicker(elem, {
+                            format: "dd-MM-yyyy",
+                            showonFocus: true,
+                        })
+                    },
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('start').value,
+                            document.getElementById('end').value
+                        ]
+                    },
+                    didOpen: () => {
+                        document.getElementById('start').removeAttribute('disabled');
+                        document.getElementById('end').removeAttribute('disabled');
+                    }
+                })
+
+                if (formValues) {
+                    Swal.fire(JSON.stringify(formValues))
+                }
+            }
+              return {
                 toast,
                 success,
                 error,
+                custom
             }
         }
     </script>
