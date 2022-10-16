@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/models"
+	"github.com/justinas/nosurf"
 )
 
 var app *config.AppConfig
@@ -18,7 +20,13 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
+
+	return td
+}
+
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 	var tc map[string]*template.Template
 	// no need to create a template cache every single time i run this func
 	if app.UseCache {
@@ -31,15 +39,17 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 	t, ok := tc[tmpl]
 
 	if !ok {
-		//log.Println(app.TemplateCache)
-		log.Fatalln("error getting template from cache")
+		log.Println("could not get template from cahce")
 	}
 
 	//t.ExecuteTemplate(w, tmpl, nil)
 	//using buffer will allow you to know with mroe certainty where error is coming from
 	buf := new(bytes.Buffer)
 
+	td = AddDefaultData(td, r)
+
 	err := t.Execute(buf, td)
+
 	if err != nil {
 		log.Println(err)
 	}
@@ -48,7 +58,10 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 
 	if err != nil {
 		log.Println(err)
+		fmt.Println("Error writing template to browser!", err)
+		return err
 	}
+	return nil
 }
 
 func CreateTemplateCache() (map[string]*template.Template, error) {
@@ -79,6 +92,6 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		}
 		myCache[name] = ts
 	}
-	log.Println(myCache)
+	//log.Println(myCache)
 	return myCache, nil
 }

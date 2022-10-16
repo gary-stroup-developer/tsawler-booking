@@ -1,9 +1,8 @@
 package handlers
 
 import (
-	"log"
+	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/models"
@@ -33,27 +32,36 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "home.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "home.page.gohtml", &models.TemplateData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 
-	stringMap := map[string]string{
-		"a": "Hello, again",
-		"b": "Gary",
-		"t": "Stroup",
-		"z": strconv.FormatBool(Repo.App.UseCache),
-	}
-
-	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
-	log.Println(remoteIP)
-	stringMap["remote_ip"] = remoteIP
-
-	render.RenderTemplate(w, "about.page.gohtml", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.RenderTemplate(w, r, "about.page.gohtml", &models.TemplateData{})
 }
 
-func (m *Repository) Fashion(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "fashion.page.gohtml", &models.TemplateData{})
+func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "contact.page.gohtml", &models.TemplateData{})
+}
+
+func (m *Repository) General(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "generals.page.gohtml", &models.TemplateData{})
+}
+
+func (m *Repository) Major(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "majors.page.gohtml", &models.TemplateData{})
+}
+
+func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "make-reservation.page.gohtml", &models.TemplateData{})
+}
+
+func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "search-availability.page.gohtml", &models.TemplateData{})
+}
+
+func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
+	start := r.FormValue("start")
+	end := r.FormValue("end")
+	w.Write([]byte(fmt.Sprintf("start date is %s and end date is %s", start, end)))
 }
