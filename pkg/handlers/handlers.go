@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
@@ -52,8 +54,26 @@ func (m *Repository) Major(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "majors.page.gohtml", &models.TemplateData{})
 }
 
+type jsonData struct {
+	Ok      bool
+	Message string
+}
+
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "make-reservation.page.gohtml", &models.TemplateData{})
+}
+
+func (m *Repository) JsonAvailability(w http.ResponseWriter, r *http.Request) {
+	data, err := json.Marshal(jsonData{
+		Ok:      true,
+		Message: "Sending data through this route to the console",
+	})
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Write(data)
 }
 
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {

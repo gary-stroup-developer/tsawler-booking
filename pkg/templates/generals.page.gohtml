@@ -56,8 +56,20 @@
                     </div>
             `
 
-            attention.custom({title: "Choose your dates",html})
-        })
+            attention.custom({
+            title: "Choose your dates",
+            html,
+            callback: function(result) {
+                console.log("called from generals page")
+
+                fetch('/search-availability-json')
+                .then((response) => response.json())
+                .then((data) => console.log(data));
+
+                {{/* fetch('/search-availability').then(response => response.json()).then(data => console.log(data)) */}}
+            }
+            });
+         })
 
     </script>
 {{end}}
