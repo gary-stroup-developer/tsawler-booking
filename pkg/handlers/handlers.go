@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
+	"github.com/gary-stroup-developer/tsawler-booking/pkg/forms"
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/models"
 	"github.com/gary-stroup-developer/tsawler-booking/pkg/render"
 )
@@ -60,7 +61,55 @@ type jsonData struct {
 }
 
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "make-reservation.page.gohtml", &models.TemplateData{})
+
+	data := make(map[string]interface{})
+	data["reservation"] = models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+	render.RenderTemplate(w, r, "make-reservation.page.gohtml", &models.TemplateData{
+		Form: forms.New(nil),
+		Data: data,
+	})
+}
+
+func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	//will be passed back to make-reservation.page.gohtml template to populate the input values
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	// create a new form struct
+	form := forms.New(r.PostForm)
+
+	// check if all required fields have input. Check if first_name meets length requirement
+	// checks if email is a valid email
+	form.Required("first_name", "last_name", "email")
+	form.MinLnegth("first_name", 3)
+	form.IsEmail("email")
+
+	// if form has errors, send back form info
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(w, r, "make-reservation.page.gohtml", &models.TemplateData{
+			Form: form, //errors used to trigger message and bootstrap class
+			Data: data, // reservation fields populate the input field values
+		})
+	}
+
 }
 
 func (m *Repository) JsonAvailability(w http.ResponseWriter, r *http.Request) {
