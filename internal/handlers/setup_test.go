@@ -27,7 +27,7 @@ func TestMain(m *testing.M) {
 	gob.Register(models.Reservation{})
 
 	// change to true when in production
-	app.InProduction = false
+	app.InProduction = true
 
 	// set the session parameters
 	session = scs.New()
