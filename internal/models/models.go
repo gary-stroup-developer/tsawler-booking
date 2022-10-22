@@ -1,6 +1,6 @@
 package models
 
-import "github.com/gary-stroup-developer/tsawler-booking/pkg/forms"
+import "github.com/gary-stroup-developer/tsawler-booking/internal/forms"
 
 // Template data holds data sent from handlers to templates
 type TemplateData struct {

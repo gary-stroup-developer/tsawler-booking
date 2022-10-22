@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
-	"github.com/gary-stroup-developer/tsawler-booking/pkg/models"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/config"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/models"
 	"github.com/justinas/nosurf"
 )
 

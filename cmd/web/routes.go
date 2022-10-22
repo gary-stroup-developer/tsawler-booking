@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/gary-stroup-developer/tsawler-booking/pkg/config"
-	"github.com/gary-stroup-developer/tsawler-booking/pkg/handlers"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/config"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/handlers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -28,6 +28,7 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/make-reservations", handlers.Repo.Reservation)
 	mux.Post("/make-reservations", handlers.Repo.PostReservation)
+	mux.Get("/reservation-summary", handlers.Repo.ReservationSummary)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
