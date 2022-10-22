@@ -15,12 +15,17 @@ import (
 
 var app *config.AppConfig
 
+var pathToTemplates = "internal/templates"
+
 // NewTemplates sets the config for the template package
 func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Error = app.Session.PopString(r.Context(), "error")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
 
 	return td
@@ -68,7 +73,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 
 	// get all the files named *.page.tmpl from ../../templates
-	pages, _ := filepath.Glob("pkg/templates/*.page.gohtml")
+	pages, _ := filepath.Glob(fmt.Sprintf("%s/*.page.gohtml", pathToTemplates))
 
 	//range through all file ending with *.pages.tmpl
 	for _, page := range pages {
@@ -78,14 +83,14 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		ts := template.Must(template.New(name).ParseFiles(page))
 
 		// checks to see if there are layout templates
-		matches, err := filepath.Glob("pkg/templates/*.layout.gohtml")
+		matches, err := filepath.Glob(fmt.Sprintf("%s/*.layout.gohtml", pathToTemplates))
 		if err != nil {
 			return myCache, err
 		}
 
 		// the page may need the layout template so ParseGlob binds the files to the ts variable
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("pkg/templates/*.layout.gohtml")
+			ts, err = ts.ParseGlob(fmt.Sprintf("%s/*.layout.gohtml", pathToTemplates))
 			if err != nil {
 				return myCache, err
 			}
