@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
-	"testing"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
@@ -21,9 +20,41 @@ import (
 
 var app config.AppConfig
 var session *scs.SessionManager
-var pathToTemplates = "../templates"
+var pathToTemplates = "../../internal/templates"
 
-func TestMain(m *testing.M) {
+// func TestMain(m *testing.M) {
+// 	gob.Register(models.Reservation{})
+
+// 	// change to true when in production
+// 	app.InProduction = true
+
+// 	// set the session parameters
+// 	session = scs.New()
+// 	session.Lifetime = 24 * time.Hour
+// 	session.Cookie.Persist = true
+// 	session.Cookie.SameSite = http.SameSiteLaxMode
+// 	session.Cookie.Secure = app.InProduction //in production should be true
+
+// 	// store session in AppConfig
+// 	app.Session = session
+
+// 	// create the template cache
+// 	tc, err := CreateTestTemplateCache()
+// 	if err != nil {
+// 		log.Fatal("Cannot create template cache")
+// 	}
+
+// 	// store the data in AppConfig
+// 	app.TemplateCache = tc
+// 	app.UseCache = false
+
+// 	repo := NewRepo(&app)
+// 	NewHandlers(repo)
+// 	render.NewTemplates(&app)
+// }
+
+func getRoutes() http.Handler {
+
 	gob.Register(models.Reservation{})
 
 	// change to true when in production
@@ -52,14 +83,11 @@ func TestMain(m *testing.M) {
 	repo := NewRepo(&app)
 	NewHandlers(repo)
 	render.NewTemplates(&app)
-}
-
-func getRoutes() http.Handler {
 
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.Recoverer)
-	mux.Use(NoSurf)
+	//mux.Use(NoSurf) need to provide CSRFToken but already test this so no need
 	mux.Use(SessionLoad)
 
 	mux.Get("/", Repo.Home)
