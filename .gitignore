@@ -32,3 +32,9 @@ $RECYCLE.BIN/
 *.lnk
 
 coverage.out
+
+#database config
+database.yml
+
+run.bat
+bookings.exe

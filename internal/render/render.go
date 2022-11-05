@@ -15,7 +15,7 @@ import (
 
 var app *config.AppConfig
 
-var pathToTemplates = "../templates"
+var pathToTemplates = "./internal/templates"
 
 // NewTemplates sets the config for the template package
 func NewTemplates(a *config.AppConfig) {
