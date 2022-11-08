@@ -14,6 +14,7 @@ import (
 	"github.com/gary-stroup-developer/tsawler-booking/internal/handlers"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/models"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/render"
+	"github.com/joho/godotenv"
 )
 
 const portNumber = ":8080"
@@ -40,6 +41,12 @@ func main() {
 }
 
 func run() (*driver.DB, error) {
+	// Load the .env file in the current directory
+	godotenv.Load()
+
+	// or
+
+	godotenv.Load(".env")
 	gob.Register(models.Reservation{})
 
 	// change to true when in production
