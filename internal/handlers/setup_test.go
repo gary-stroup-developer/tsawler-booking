@@ -11,6 +11,7 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/config"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/driver"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/models"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/render"
 	"github.com/go-chi/chi"
@@ -80,7 +81,7 @@ func getRoutes() http.Handler {
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := NewRepo(&app)
+	repo := NewRepo(&app, &driver.DB{})
 	NewHandlers(repo)
 	render.NewTemplates(&app)
 

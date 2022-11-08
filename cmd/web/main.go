@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/config"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/driver"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/handlers"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/models"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/render"
@@ -20,10 +22,12 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	defer db.SQL.Close()
 
 	fmt.Printf("Starting application on port %s", portNumber)
 
@@ -35,7 +39,7 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 	gob.Register(models.Reservation{})
 
 	// change to true when in production
@@ -51,20 +55,28 @@ func run() error {
 	// store session in AppConfig
 	app.Session = session
 
+	// connect to database
+	pass := os.Getenv("DBPASSWORD")
+	db, err := driver.ConnectSQL(fmt.Sprintf("host=localhost port=5432 dbname=bookings user=postgres password=%s", pass))
+
+	if err != nil {
+		log.Fatal("cannot connect to database! Dying...")
+	}
+
 	// create the template cache
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("Cannot create template cache")
-		return err
+		return nil, err
 	}
 
 	// store the data in AppConfig
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
 	render.NewTemplates(&app)
 
-	return nil
+	return db, nil
 }

@@ -3,6 +3,7 @@ go.mod
 go.sum
 
 .env
+./cmd/web/.env
 
 .DS_Store
 
