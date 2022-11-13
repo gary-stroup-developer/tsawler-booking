@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/gary-stroup-developer/tsawler-booking/internal/helpers"
 	"github.com/justinas/nosurf"
 )
 
@@ -23,6 +24,17 @@ func NoSurf(next http.Handler) http.Handler {
 // SessionLoad loads and saves the session on every request
 func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
+}
+
+func Auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !helpers.IsAuthenticated(r) {
+			session.Put(r.Context(), "error", "Login first!")
+			http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 // this was just practice...saving for reference

@@ -12,6 +12,7 @@ import (
 	"github.com/gary-stroup-developer/tsawler-booking/internal/config"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/driver"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/handlers"
+	"github.com/gary-stroup-developer/tsawler-booking/internal/helpers"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/models"
 	"github.com/gary-stroup-developer/tsawler-booking/internal/render"
 	"github.com/joho/godotenv"
@@ -88,6 +89,6 @@ func run() (*driver.DB, error) {
 	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
 	render.NewRenderer(&app)
-
+	helpers.NewHelpers(&app)
 	return db, nil
 }
